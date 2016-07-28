@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>node3</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu:700' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="css/stylesheet.css">
+  	<script type="text/javascript" src="js/jquery.min.js"></script>
+  	<script type="text/javascript" src="js/three.min.js"></script>
+		<script type="text/javascript" src="js/stats.min.js"></script>
+		<script type="text/javascript" src="js/projector.js"></script>
+		<script type="text/javascript" src="js/canvasRenderer.js"></script>
+		<script type="text/javascript" src="js/softwareRenderer.js"></script>
+		<script type="text/javascript" src="js/cannon.min.js"></script>
+		<script type="text/javascript" src="js/cannonDebugRenderer.js"></script>
+  	<script type="text/javascript" src="js/quadtree.js"></script>
+		<script type="text/javascript" src="js/car.js"></script>
+		<!--<script type="text/javascript" src="js/car2.js"></script>-->
+  	<script type="text/javascript" src="js/randomColor.js"></script>
+		<script type="text/javascript" src="js/virtualjoystick.js"></script>
+		<script type="text/javascript" src="js/SPE.min.js"></script>
+		<!--<script type="text/javascript" src="models/car.js"></script>-->
+  	<script type="text/javascript" src="http://f1v3.net/8100/socket.io/socket.io.js"></script>
+  	<script type="text/javascript" src="js/client.js"></script>
+    
+    <!--<link rel="shortcut icon" href="img/icon.png">-->
+  </head>
+  <body>
+    <div id="overlays" style="position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px; z-index: 200; background-color: rgba(0, 0, 0, 0.498039);">
+      <div id="helloDialog">
+        <form role="form">
+          <div class="form-group">
+            <div style="float: left; margin-left: 20px;">
+              <h2>game</h2>
+            </div>
+            <!--<div class="fb-like fb_iframe_widget" style="float: right; margin-top: 30px;" data-href="https://www.facebook.com/playagar.io" data-layout="button" data-action="like" data-show-faces="true" data-share="true" fb-xfbml-state="rendered" fb-iframe-plugin-query="action=like&amp;app_id=677505792353827&amp;container_width=0&amp;href=https%3A%2F%2Fwww.facebook.com%2Fplayagar.io&amp;layout=button&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=true"><span style="vertical-align: bottom; width: 92px; height: 20px;"><iframe name="f32edddb9" width="1000px" height="1000px" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" title="fb:like Facebook Social Plugin" src="http://www.facebook.com/v2.3/plugins/like.php?action=like&amp;app_id=677505792353827&amp;channel=http%3A%2F%2Fstatic.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F1ldYU13brY_.js%3Fversion%3D41%23cb%3Df27f43b104%26domain%3Dagar.io%26origin%3Dhttp%253A%252F%252Fagar.io%252Ff359122624%26relation%3Dparent.parent&amp;container_width=0&amp;href=https%3A%2F%2Fwww.facebook.com%2Fplayagar.io&amp;layout=button&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=true" style="border: none; visibility: visible; width: 92px; height: 20px;" class=""></iframe></span></div>-->
+            <br clear="both">
+          </div>
+          <div class="form-group">
+            <input id="nick" class="form-control" placeholder="Nick" maxlength="15" onkeydown="if (event.keyCode == 13) {event.preventDefault(); document.getElementById('playBtn').click();}">
+            <!--<select id="gamemode" class="form-control" onchange="setGameMode($(this).val());" required="">
+              <option selected="" value="">FFA</option>
+              <option value=":teams">Teams</option>
+              <option value=":experimental">Experimental</option>
+            </select>-->
+            <br clear="both">
+          </div>
+          <!--<div id="locationUnknown"></div>
+          <div>
+            <div class="text-muted region-message CN-China" style="display: none;"></div>
+          </div>-->
+          <div class="form-group">
+            <button type="button" id="playBtn" class="btn btn-play btn-primary btn-needs-server">Play</button>
+            <button type="button" onclick="$('#settings, #instructions').toggle();return false;" class="btn btn-info btn-settings"><i class="glyphicon glyphicon-cog"></i></button>
+            <br clear="both">
+          </div>
+          <div id="settings" class="checkbox" style="display:none;">
+            <hr>
+            <!--<div class="form-group">
+              <div id="locationKnown">
+                <select id="region" class="form-control" onchange="setRegion($('#region').val());" required="">
+                  <option selected="" disabled="" value=""> -- Select a Region -- </option>
+                  <option value="US-Fremont">US West (12319 players)</option>
+                  <option value="US-Atlanta">US East (26644 players)</option>
+                  <option value="BR-Brazil">South America (18417 players)</option>
+                  <option value="EU-London">Europe (69116 players)</option>
+                  <option value="RU-Russia">Russia (11701 players)</option>
+                  <option value="TK-Turkey">Turkey (12110 players)</option>
+                  <option value="JP-Tokyo">East Asia (2781 players)</option>
+                  <option value="CN-China">China (2746 players)</option>
+                  <option value="SG-Singapore">Oceania (2795 players)</option>
+                </select>
+              </div>
+              <button id="spectateBtn" onclick="spectate(); return false;" class="btn btn-warning btn-spectate btn-needs-server">Spectate</button>
+              <br clear="both">
+            </div>-->
+            <div style="margin: 6px;">
+              <label><input type="checkbox" onchange="nothing($(this).is(':checked'));"> Do nothing</label>
+              <label><input type="checkbox" onchange="nothing($(this).is(':checked'));"> Do nothing</label>
+              <label><input type="checkbox" onchange="nothing($(this).is(':checked'));"> Do nothing</label>
+              <label><input type="checkbox" onchange="nothing($(this).is(':checked'));"> Do nothing</label>
+              <label><input type="checkbox" onchange="nothing($(this).is(':checked'));"> Do nothing</label>
+            </div>
+          </div>
+        </form>
+        <div id="instructions">
+          <hr>
+          <center>
+            <span class="text-muted">
+              no instructions yet
+              <!--Move your mouse to control your cell<br>
+              Press <b>Space</b> to split<br>
+              Press <b>W</b> to eject some mass<br>-->
+            </span>
+          </center>
+        </div>
+        <!--<hr>
+        <center>
+          Ads go here
+          <div id="a300x250" style="background-image: url(http://agar.io/blocker.png);"></div>
+          <small class="text-muted text-center">Advertisement</small>
+        </center>-->
+        <!--<hr style="margin-bottom: 7px; ">
+        <div style="margin-bottom: 5px; float: left; line-height: 32px; margin-left: 6px; height: 32px;">
+          <a href="privacy.txt" class="text-muted">Privacy</a> |
+          <a href="terms.txt" class="text-muted">ToS</a> |
+          <a href="changelog.txt" class="text-muted">Changelog</a>
+        </div>-->
+        
+        <br clear="both">
+      </div>
+    </div>
+		
+		<div class="chat" style="z-index: 200;">
+		<ul id="messages" style="z-index: 200;"></ul>
+		<input id="msgIn" autocomplete="off" style="z-index: 200;"/>
+		<button id="send" style="z-index: 200;">Send</button>
+		
+
+  </body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Game Test</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width*2, height=device-height*2, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu:700' rel='stylesheet' type='text/css'>
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="css/stylesheet.css">
+  	<script type="text/javascript" src="js/jquery.min.js"></script>
+  	<script type="text/javascript" src="js/three.min.js"></script>
+		<script type="text/javascript" src="js/orbitControls.js"></script>
+		<script type="text/javascript" src="js/stats.min.js"></script>
+		<script type="text/javascript" src="js/projector.js"></script>
+		<script type="text/javascript" src="js/canvasRenderer.js"></script>
+		<script type="text/javascript" src="js/SVGRenderer.js"></script>
+		<script type="text/javascript" src="js/softwareRenderer.js"></script>
+		<!--<script type="text/javascript" src="js/CSS2DRenderer.js"></script>
+		<script type="text/javascript" src="js/CSS3DRenderer.js"></script>
+		<script type="text/javascript" src="js/CSS3DStereoRenderer.js"></script>
+		<script type="text/javascript" src="js/raytracingRenderer.js"></script>-->
+		<script type="text/javascript" src="js/cannon.min.js"></script>
+		<script type="text/javascript" src="js/cannonDebugRenderer.js"></script>
+  	<script type="text/javascript" src="js/quadtree.js"></script>
+		<script type="text/javascript" src="js/car.js"></script>
+		<!--<script type="text/javascript" src="js/car2.js"></script>-->
+  	<script type="text/javascript" src="js/randomColor.js"></script>
+		<script type="text/javascript" src="js/virtualjoystick.js"></script>
+		<script type="text/javascript" src="js/SPE.min.js"></script>
+		<script type="text/javascript" src="js/GPUParticleSystem.js"></script>
+		<!--<script type="text/javascript" src="models/car.js"></script>-->
+  	<script type="text/javascript" src="http://f1v3.net/8100/socket.io/socket.io.js"></script>
+  	<script type="text/javascript" src="js/client.js"></script>
+    
+    <!--<link rel="shortcut icon" href="img/icon.png">-->
+  </head>
+	<body>
+
+		<div id="overlays" style="margin: 0; position: absolute; left: 0px; right: 0px; top: 0px; bottom: 0px; z-index: 200; background-color: rgba(0, 0, 0, 0.498039);">
+			<div id="title">
+				<!--<h3><a href="http://f1v3.net">F1V3</a> Presents...</h3>
+				<h1>Physics-Based Multiplayer Sportsball Game</h1>-->
+			</div>
+			<div id="helloDialog" style="margin: 0;">
+				<form role="form">
+					<div class="form-group">
+						<!--<div class="fb-like fb_iframe_widget" style="float: right; margin-top: 30px;" data-href="https://www.facebook.com/playagar.io" data-layout="button" data-action="like" data-show-faces="true" data-share="true" fb-xfbml-state="rendered" fb-iframe-plugin-query="action=like&amp;app_id=677505792353827&amp;container_width=0&amp;href=https%3A%2F%2Fwww.facebook.com%2Fplayagar.io&amp;layout=button&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=true"><span style="vertical-align: bottom; width: 92px; height: 20px;"><iframe name="f32edddb9" width="1000px" height="1000px" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" title="fb:like Facebook Social Plugin" src="http://www.facebook.com/v2.3/plugins/like.php?action=like&amp;app_id=677505792353827&amp;channel=http%3A%2F%2Fstatic.ak.facebook.com%2Fconnect%2Fxd_arbiter%2F1ldYU13brY_.js%3Fversion%3D41%23cb%3Df27f43b104%26domain%3Dagar.io%26origin%3Dhttp%253A%252F%252Fagar.io%252Ff359122624%26relation%3Dparent.parent&amp;container_width=0&amp;href=https%3A%2F%2Fwww.facebook.com%2Fplayagar.io&amp;layout=button&amp;locale=en_US&amp;sdk=joey&amp;share=true&amp;show_faces=true" style="border: none; visibility: visible; width: 92px; height: 20px;" class=""></iframe></span></div>-->
+						<br clear="both">
+					</div>
+					<div class="form-group">
+						<input id="nick" class="form-control" style="width: 65%; float: left;" placeholder="Username" maxlength="15" onkeydown="if (event.keyCode == 13) {event.preventDefault(); document.getElementById('playBtn').click();}">
+						<br clear="both">
+						<!--<input id="console" class="form-control" placeholder="Password" style="width: 65%; float: left;" type="password" onchange="var pass=this.value">-->
+						<br clear="both">
+					</div>
+					<!--<div id="locationUnknown"></div>
+					<div>
+						<div class="text-muted region-message CN-China" style="display: none;"></div>
+					</div>-->
+					<div class="form-group">
+						<button type="button" id="playBtn" class="btn btn-play btn-primary btn-needs-server">Play</button>
+						<button type="button" onclick="$('#settings, #instructions').toggle();return false;" class="btn btn-info btn-settings"><i class="glyphicon glyphicon-cog"></i></button>
+						<br clear="both">
+					</div>
+					<div id="settings" class="checkbox" style="display:none;">
+						<hr>
+						<div style="margin: 6px;">
+							Renderer:
+							<select id="renderSetter"><!--onchange="setRenderer(this.value)">-->
+								<option value="WebGLRenderer">Webgl</option>
+								<option value="CanvasRenderer">Canvas</option>
+								<option value="SVGRenderer">SVG</option>
+								<option value="SoftwareRenderer">SoftwareRenderer</option>
+								<!--<option value="RaytracingRenderer">RaytracingRenderer</option>
+								<option value="CSS2DRenderer">CSS2D</option>
+								<option value="CSS3DRenderer">CSS3D</option>
+								<option value="CSS3DStereoRenderer">CSS3DStereo</option>-->
+							</select>
+						</div>
+					</div>
+				</form>
+				<div id="instructions" class="resize">
+					<hr>
+					<div id="controls2">
+						<b>Controls:</b>
+						<ul>
+							<li>WASD to move</li>
+							<li>Space to Jump
+								<ul>
+									<li>To double jump, press space again</li>
+									<li>To dodge, press space again while holding W,A,S, or D</li>
+								</ul>
+							</li>
+							<li>Shift to rocket boost</li>
+							<li>R to flip car (if upside down)</li>
+							<li>&#8592; &#8597; &#8594; to control camera</li>
+						</ul>
+						
+						<b>New Features:</b>
+						<ul>
+                          	<li>Profanity filter added server side - needs better wordlist</li>
+							<li>Boosting displays particle effects</li>
+							<li><i><b>Awesome</b></i> sound effect for boosting added</li>
+							<li>Steering while in the air improved</li>
+							<li>Improved name labels</li>
+							<li>Arrow keys pan camera orbitally</li>
+						</ul>
+					</div>
+					<hr style="margin-top: 4px; margin-bottom: 4px;">
+				</div>
+				<hr>
+
+				<!--<hr>
+				<center>
+					Ads go here
+					<div id="a300x250" style="background-image: url(http://agar.io/blocker.png);"></div>
+					<small class="text-muted text-center">Advertisement</small>
+				</center>-->
+				<!--<hr style="margin-top: 2px; margin-bottom: 7px;">
+				<div style="margin-bottom: 5px; line-height: 32px; margin-left: 6px; height: 32px;">
+					<a href="privacy.txt" class="text-muted">Privacy</a> |
+					<a href="terms.txt" class="text-muted">ToS</a> |
+					<a href="changelog.txt" class="text-muted">Changelog</a>
+				</div>-->
+
+				<br clear="both">
+
+			</div>
+			<div id="bottom" >
+				<!--<p>Instructions: TBD</p>-
+				<hr style="width:50%;"/>-->
+				<!--<div id="controls" class="resize">
+					<b>Controls:</b>
+					<ul>
+						<li>WASD to move</li>
+						<li>Space to Jump
+							<ul>
+								<li>To double jump, press space again</li>
+								<li>To dodge, press space again while holding W,A,S, or D</li>
+							</ul>
+						</li>
+						<li>Shift to rocket boost</li>
+						<li>R to flip car (if upside down)</li>
+						<li>&#8592; &#8597; &#8594; to control camera</li>
+					</ul>
+				</div>-->
+			</div>
+		</div>
+
+
+		<div class="chat" style="z-index: 100;">
+			<ul id="messages" style="z-index: 100;"></ul>
+			<input id="msgIn" autocomplete="off" style="z-index: 100;"/>
+			<button id="send" style="z-index: 100;">Send</button>
+		</div>
+
+
+	</body>
+</html>
