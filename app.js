@@ -1,6 +1,4 @@
 var util = require('util');
-var filter = require('bad-words');
-var list = require('badwords-list');
 var THREE = require('three');
 var CANNON = require('cannon');
 var express = require('express');
@@ -48,8 +46,6 @@ function gameServer() {
 	//      |______    inside of corner of cube
 	//     /      X
 	//    / Y
-  this.filter = new filter();
-	//this.filter.addWords(['a$$']);
   this.clients = [];
   this.nodes = [];
   this.locations = {};
@@ -190,7 +186,7 @@ gameServer.prototype.initScene = function() {
 	var ball = new node("ball");
 	this.nodes.push(ball);
   
-  	for(var i = 0; i < 3; i++) {
+  	for(var i = 0; i < 50; i++) {
     	var ball1 = new node("ball");
 			ball1.position.x = Math.random()*50;
 			ball1.position.y = Math.random()*50;
@@ -500,7 +496,7 @@ function node(type, owner, clapos, username) {
 		rSpd: 0.05,
 		rMinMax: 0.6,
 		jumps: 0,
-		airTurnForce: 10,
+		airTurnForce: 1,
 		jumpForce: 200*10,
 		jumpMoveForce: 800*10,
 		jumpRollForce: 55*10,
@@ -929,6 +925,7 @@ playerTracker.prototype.calcViewBox = function() {
 //io.sockets.socket(savedsocketId).emit(...)
 //better: io.to(socketId).emit('message', 'for your eyes only');
 
+
 var gameServer1 = new gameServer();
 var gs = gameServer1;
 gs.initScene();
@@ -990,10 +987,10 @@ io.on('connection', function (socket) {
     //var cloc = gs.locations[socket.id].client;
 		//var cloc = gs.map[]
 		socket.on('chat message', function(msg) {
-			io.emit('chat message', {msg:gs.filter.clean(msg), name:gs.filter.clean(data.username)});
+			io.emit('chat message', {msg:msg, name:data.username});
 		});
 		
-    gs.clients[socket.id].username = gs.filter.clean(data.username);
+    gs.clients[socket.id].username = data.username;
     gs.clients[socket.id].isOnline = true;
     
     //var pos = {x:gs.getRandPos().x, y:gs.getRandPos().y, z:gs.getRandPos().z};
@@ -1019,7 +1016,7 @@ io.on('connection', function (socket) {
 			glength: gs.border.zMax,
       gwidth: gs.border.xMax,
       gheight: gs.border.yMax,
-      username: gs.filter.clean(data.username),
+      username: data.username,
       x: 0,//gs.clients[socket.id].nodes[npos.clapos].position.z
       y: 0,
 			z: 0
