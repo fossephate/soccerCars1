@@ -186,7 +186,7 @@ gameServer.prototype.initScene = function() {
 	var ball = new node("ball");
 	this.nodes.push(ball);
   
-  	for(var i = 0; i < 50; i++) {
+  	for(var i = 0; i < 5; i++) {
     	var ball1 = new node("ball");
 			ball1.position.x = Math.random()*50;
 			ball1.position.y = Math.random()*50;
